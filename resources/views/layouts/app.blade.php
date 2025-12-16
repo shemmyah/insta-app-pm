@@ -149,6 +149,7 @@
 
                     <div class="col-9">
                         @yield('content')
+                        @yield('scripts')
                     </div>
                 </div>
             </div>
