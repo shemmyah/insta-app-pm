@@ -123,6 +123,7 @@
                 </div>
             </div>
         </nav>
+        
 
         <main class="py-5">
             <div class="container">
@@ -140,7 +141,7 @@
                                     <i class="fa-solid fa-newspaper"></i> Posts
                                 </a>
                                 <a href="{{ route('admin.categories') }}"
-                                    class="list-group-item {{ request()->is('admin/categories') ? 'active' : '' }}"">
+                                    class="list-group-item {{ request()->is('admin/categories') ? 'active' : '' }}">
                                     <i class="fa-solid fa-tags"></i> Categories
                                 </a>
                             </div>

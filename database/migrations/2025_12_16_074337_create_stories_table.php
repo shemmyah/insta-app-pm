@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('stories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('media_path');
+            $table->enum('madia_type',['imgae','video']);
             $table->timestamps();
         });
     }
