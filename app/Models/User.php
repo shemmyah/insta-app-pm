@@ -70,4 +70,10 @@ class User extends Authenticatable
     public function isFollowed() {
         return $this->followers()->where('follower_id', Auth::user()->id)->exists();
     }
+
+    // App\Models\User.php
+    public function stories(){
+    return $this->hasMany(Story::class);
+    }
+
 }
