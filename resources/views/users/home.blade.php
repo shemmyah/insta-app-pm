@@ -3,6 +3,7 @@
 @section('title', 'Home')
 
 @section('content')
+    
     <div class="row gx-5">
         <div class="col-8">
             @forelse ($home_posts as $post)

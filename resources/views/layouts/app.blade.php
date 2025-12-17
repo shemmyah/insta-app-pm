@@ -123,7 +123,9 @@
                 </div>
             </div>
         </nav>
-        
+
+
+
 
         <main class="py-5">
             <div class="container">
@@ -147,6 +149,8 @@
                             </div>
                         </div>
                     @endif
+
+                    
 
                     <div class="col-9">
                         @yield('content')
