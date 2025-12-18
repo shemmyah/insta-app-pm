@@ -33,13 +33,27 @@ class HomeController extends Controller
         // return view('users.home')->with('all_posts', $all_posts);
         $home_posts = $this->getHomePosts();
         $suggested_users = $this->getSuggestedUsers();
+        // $hasStory= Auth::user()->stories->where('expires_at','>',now())->exists();
 
+        // $user = User::whereHas('stories', function ($query) {
+        // $query->where('expires_at', '>', now());
+        // })->get();
+        // dd($this->user->stories());
+        $users = $this->user->get();
+        // $user = $this->create();
         return view('users.home')
                 ->with('home_posts', $home_posts)
-                ->with('suggested_users', $suggested_users);
-           
+                ->with('suggested_users', $suggested_users)
+                ->with('users',$users);
+                // ->with('hasStory',$hasStory);
 
     }
+    
+    // public function create() {
+    //     // dd(Auth::user()->id);
+    //    return view('users.story.create');
+    // }
+
 
     #Get the posts of the users that the Auth user is following
     public function getHomePosts() {

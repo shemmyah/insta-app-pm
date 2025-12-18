@@ -125,6 +125,7 @@
         </nav>
 
 
+        @yield('content')
 
 
         <main class="py-5">
@@ -152,8 +153,8 @@
 
                     
 
+                    
                     <div class="col-9">
-                        @yield('content')
                         @yield('scripts')
                     </div>
                 </div>

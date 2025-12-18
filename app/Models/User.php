@@ -76,4 +76,8 @@ class User extends Authenticatable
     return $this->hasMany(Story::class);
     }
 
+    public function hasStories() {
+        return $this->stories()->where('expires_at','>',now())->exists();
+    }
+
 }
