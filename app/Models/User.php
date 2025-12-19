@@ -80,4 +80,18 @@ class User extends Authenticatable
         return $this->stories()->where('expires_at','>',now())->exists();
     }
 
+    #Message
+    #多対対リレーション(User↔︎Conversation)
+    public function conversations() {
+       return $this->belongsToMany(Conversation::class);
+    }
+
+    #1対多リレーション(Message→User/sender)
+    public function messages() {
+       return $this->hasMany(Message::class,'sender_id');
+    }
+
+
+
+
 }

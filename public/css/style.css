@@ -49,3 +49,53 @@
     height: 3.5rem;
     object-fit: cover;
 }
+
+/* ===チャット吹き出し=== */
+.chat-bubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  line-height: 1.4;
+  font-size: 0.9rem;
+  position: relative;
+  word-wrap: break-word;
+  display: inline-block;
+}
+
+/* 相手 */
+.chat-bubble.other {
+  background: #f1f1f1f1;
+  color: #000;
+  border-top-left-radius: 4px;
+}
+
+.chat-bubble.other::after {
+  content: "";
+  position: absolute;
+  left: -6px;
+  bottom: 10px;
+  width: 12px;
+  height: 12px;
+  background: #f1f1f1;
+  transform: rotate(45deg);
+}
+
+/* 自分 */
+.chat-bubble.me {
+  background: #0d6efd;
+  color: #fff;
+  border-top-right-radius: 4px;
+}
+
+.chat-bubble.me::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  bottom: 10px;
+  width: 12px;
+  height: 12px;
+  background: #0d6efd;
+  transform: rotate(45deg);
+}
+
+
