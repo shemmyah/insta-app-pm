@@ -123,6 +123,14 @@
         function showLogin() {
             document.getElementById("authBox").style.transform = "translateX(0)";
         }
+
+        // URLに ?mode=register が付いていたら最初からRegisterを表示
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("mode") === "register") {
+                showRegister();
+            }
+        });
     </script>
 
     <style>
