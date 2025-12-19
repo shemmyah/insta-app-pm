@@ -3,44 +3,40 @@
 @section('title', 'Home')
 
 @section('content')
-    <div class="overflow-x-auto flex m-3">
-        <div>
-            {{-- {{ dd($user->stories) }} --}}
-            @foreach ($users as $user)
-                @if ($user->stories->count() > 1)
-                    <a href="{{ route('story.create') }}" class="flex flex-col items-center">
-                        @if (Auth::user()->avatar)
-                            <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" class="rounded-circle"
-                                style="width: 100px; height: 100px; object-fit: cover;">
-                        @else
-                            <i class="fa-solid fa-circle-user text-secondary icon-md"></i>
-                        @endif
-                    </a>
+    <div class="flex gap-4 overflow-x-auto p-3">
 
+        <a href="#" class="d-flex items-center text-decoration-none">
+            <div class="position-relative d-inline-block">
+                @if (Auth::user()->avatar)
+                    <img src="{{ Auth::user()->avatar }}" class="avatar-md">
                 @else
-                    <a href="" class="flex flex-col items-center">
-                        @if (Auth::user()->avatar)
-                            <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" class="rounded-circle"
-                                style="width: 100px; height: 100px; object-fit: cover;">
-                        @else
-                            <i class="fa-solid fa-circle-user text-secondary icon-md"></i>
-                        @endif
-                    </a>
-
+                    <i class="fa-solid fa-circle-user text-secondary icon-md"></i>
                 @endif
 
-            @endforeach
+                <span class="position-absolute bottom-0 end-0 p-0 d-flex align-items-center text-dark justify-content-center fs-4">+</span>
+            </div>
+            {{-- <span class="text-sm">Your story</span> --}}
+        </a>
 
-        </div>
-        <div class="">
+        @foreach ($storyUsers as $user)
+            <a href="{{ route('story.show', $user->id) }}" class="flex flex-col items-center">
+                <img src="{{ $user->avatar }}" alt="{{ $user->name }}"
+                    class="w-24 h-24 rounded-full object-cover border-4 border-pink-500">
+                <span class="text-sm text-truncate">{{ $user->name }}</span>
+            </a>
+        @endforeach
 
-            {{-- @foreach ($users as $user)
+    </div>
+
+    <div class="">
+
+        {{-- @foreach ($users as $user)
             <a href="" class="flex flex-col items-center"></a>
             <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}"
                 class="w-20 h-20 rounded-full border-4 border-pink-500 object-cover">
             </a>
             @endforeach --}}
-        </div>
+    </div>
 
     </div>
 
@@ -62,7 +58,8 @@
                                 <div class="text-center">
                                     <h2>Share Photos</h2>
                                     <p class="text-secondary">When you share photos, they'll appear on your profile.</p>
-                                    <a href="{{ route('post.create') }}" class="text-decoration-none">Share your first photo</a>
+                                    <a href="{{ route('post.create') }}" class="text-decoration-none">Share your first
+                                        photo</a>
                                 </div>
                             @endforelse
                         </div>

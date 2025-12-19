@@ -39,12 +39,19 @@ class HomeController extends Controller
         // $query->where('expires_at', '>', now());
         // })->get();
         // dd($this->user->stories());
-        $users = $this->user->get();
+        // $users = $this->user->get();
         // $user = $this->create();
+
+        $storyUsers = User::where('id', '!=', Auth::user()->id)
+        ->whereHas('stories', function ($query) {
+            $query->where('expires_at', '>', now());
+        })
+        ->with('stories')
+        ->get();
         return view('users.home')
                 ->with('home_posts', $home_posts)
                 ->with('suggested_users', $suggested_users)
-                ->with('users',$users);
+                ->with('storyUsers',$storyUsers);
                 // ->with('hasStory',$hasStory);
 
     }
