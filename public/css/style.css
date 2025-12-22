@@ -1,4 +1,10 @@
 /* For small icons */
+/* @media (max-width: 768px) {
+    .profile-page {
+        padding: 10px;
+        max-width: 100%;
+    }
+} */
 
 .icon-sm {
     font-size: 2rem;
@@ -10,7 +16,7 @@
     object-fit: cover;
 }
 
-.fa-heart {
+.grid-overlay span i {
     font-size: 1.5rem;
 }
 
@@ -50,52 +56,223 @@
     object-fit: cover;
 }
 
-/* ===チャット吹き出し=== */
+/* Chat bubbles */
 .chat-bubble {
-  max-width: 70%;
-  padding: 10px 14px;
-  border-radius: 18px;
-  line-height: 1.4;
-  font-size: 0.9rem;
-  position: relative;
-  word-wrap: break-word;
-  display: inline-block;
+    max-width: 70%;
+    padding: 10px 14px;
+    border-radius: 18px;
+    line-height: 1.4;
+    font-size: 0.9rem;
+    position: relative;
+    word-wrap: break-word;
+    display: inline-block;
 }
 
-/* 相手 */
+/* Other (incoming) */
 .chat-bubble.other {
-  background: #f1f1f1f1;
-  color: #000;
-  border-top-left-radius: 4px;
+    background: #f1f1f1;
+    color: #000;
+    border-top-left-radius: 4px;
 }
 
 .chat-bubble.other::after {
-  content: "";
-  position: absolute;
-  left: -6px;
-  bottom: 10px;
-  width: 12px;
-  height: 12px;
-  background: #f1f1f1;
-  transform: rotate(45deg);
+    content: "";
+    position: absolute;
+    left: -6px;
+    bottom: 10px;
+    width: 12px;
+    height: 12px;
+    background: #f1f1f1;
+    transform: rotate(45deg);
 }
 
-/* 自分 */
+/* Me (outgoing) */
 .chat-bubble.me {
-  background: #0d6efd;
-  color: #fff;
-  border-top-right-radius: 4px;
+    background: #0d6efd;
+    color: #fff;
+    border-top-right-radius: 4px;
 }
 
 .chat-bubble.me::after {
-  content: "";
-  position: absolute;
-  right: -6px;
-  bottom: 10px;
-  width: 12px;
-  height: 12px;
-  background: #0d6efd;
-  transform: rotate(45deg);
+    content: "";
+    position: absolute;
+    right: -6px;
+    bottom: 10px;
+    width: 12px;
+    height: 12px;
+    background: #0d6efd;
+    transform: rotate(45deg);
 }
 
+/* PAGE */
+.profile-page {
+    background: #000;
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px 10px;
+}
+
+/* HEADER */
+.profile-header {
+    max-width: 600px;
+    margin: auto;
+}
+
+/* AVATAR */
+.avatar-container {
+    position: relative;
+}
+
+.profile-avatar {
+    width: 9rem;
+    height: 9rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #262626;
+}
+
+.profile-avatar-icon {
+    font-size: 9rem;
+    color: #262626;
+}
+
+/* NOTE BUBBLE */
+.note-bubble {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    background: rgba(255, 255, 255, 0.1); /* semi-transparent */
+    color: #eee;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    /* backdrop-filter: blur(6px);  */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: background 0.2s, transform 0.1s;
+}
+
+.note-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 15px; /* adjust for horizontal position */
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    box-shadow: 12px 4px rgba(255, 255, 255, 0.15);
+}
+
+.note-bubble:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+
+/* STATS */
+/* .profile-stats span {
+    color: #fff;
+    font-size: 14px;
+} */
+
+.profile-bio {
+    color: #e0e0e0;
+}
+
+/* TABS */
+.profile-tabs {
+    border-top: 1px solid #262626;
+    gap: 60px;
+}
+
+.tab-item {
+    color: #8e8e8e;
+    font-size: 14px;
+    padding: 12px 0;
+}
+
+.tab-item.active {
+    color: #fff;
+    border-top: 1px solid #fff;
+}
+
+/* GRID */
+.grid-square {
+    position: relative;
+    aspect-ratio: 1/1;
+}
+
+.profile-grid-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.grid-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    opacity: 0;
+    color: #fff;
+}
+
+.grid-square:hover .grid-overlay {
+    opacity: 1;
+}
+
+/* MODAL */
+.ig-note-modal {
+    background: #000;
+    color: #fff;
+    border: 1px solid #9aa0a4;
+    border-radius: 16px;
+}
+
+.ig-note-textarea {
+    width: 100%;
+    background: #121212;
+    color: #fff;
+    border: 1px solid #9aa0a4;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.ig-note-textarea::placeholder {
+    color: #8e8e8e;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+/* MODAL BUTTONS */
+.modal-body .ig-btn-primary {
+    /* background-color: #9aa0a4; */
+    color: #fff;
+    border-radius: 10px;
+    border: 1px solid #9aa0a4;
+    font-weight: 600;
+}
+
+.modal-body .ig-btn-danger {
+    background: #2a2a2a;
+    color: #fff;
+    border: 1px solid #555e63;
+    border-radius: 10px;
+}
+
+.modal-body .ig-btn-primary:hover {
+    color: #fffbfb;
+    background: #6f6d6d;
+}
+
+.modal-body .ig-btn-danger:hover {
+    color: #fffbfb;
+    background: #6f6d6d;
+}
 

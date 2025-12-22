@@ -52,46 +52,66 @@ class User extends Authenticatable
     }
 
     #To get all the posts of a user
-    public function posts() {
+    public function posts()
+    {
         return $this->hasMany(Post::class);
     }
 
     #To get all the followers of a user
-    public function followers() {
+    public function followers()
+    {
         return $this->hasMany(Follow::class, 'following_id');
     }
 
     #To get all the users that the user is following
-    public function following() {
+    public function following()
+    {
         return $this->hasMany(Follow::class, 'follower_id');
     }
 
     #To search for auth user if alreeady exists in follower_id column
-    public function isFollowed() {
+    public function isFollowed()
+    {
         return $this->followers()->where('follower_id', Auth::user()->id)->exists();
     }
 
     // App\Models\User.php
-    public function stories(){
-    return $this->hasMany(Story::class);
+    public function stories()
+    {
+        return $this->hasMany(Story::class);
     }
 
-    public function hasStories() {
-        return $this->stories()->where('expires_at','>',now())->exists();
+    public function hasStories()
+    {
+        return $this->stories()->where('expires_at', '>', now())->exists();
     }
 
     #Message
     #多対対リレーション(User↔︎Conversation)
-    public function conversations() {
-       return $this->belongsToMany(Conversation::class);
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class);
     }
 
     #1対多リレーション(Message→User/sender)
-    public function messages() {
-       return $this->hasMany(Message::class,'sender_id');
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+    public function note()
+    {
+        return $this->hasOne(Note::class);
     }
 
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 
+    public function likedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'likes');
+    }
 
 
 }

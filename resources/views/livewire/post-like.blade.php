@@ -5,7 +5,7 @@
         type="button"
     >
         @if ($liked)
-            <i class="fa-solid fa-heart text-danger"></i>
+            <i class="fa-solid fa-heart text-danger fs-4"></i>
         @else
             <i class="fa-regular fa-heart"></i>
         @endif
