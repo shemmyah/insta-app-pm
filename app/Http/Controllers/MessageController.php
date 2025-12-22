@@ -11,15 +11,25 @@ class MessageController extends Controller
 {
     #DMトップ（左：会話一覧/右：未選択）
     public function index(){
-        $conversations = auth()->user()
-            ->conversations()
-            ->with(['users', 'lastMessage'])
-            ->get();
+        $authUser =auth()->user();
+        $conversations = Conversation::with([
+        'users',
+        'lastMessage'
+    ])
+    ->whereHas('users', function ($q) use ($authUser) {
+        $q->where('users.id', $authUser->id);
+    })
+    ->latest('updated_at')
+    ->get();
+
+     $conversations->each(function ($conv) use ($authUser) {
+        $conv->other_user = $conv->users->firstWhere('id', '!=', $authUser->id);
+    });
 
         return view('users.messages.index', [
             'conversations' => $conversations,
             'conversation'  => null,
-           
+            'authUser'      => $authUser,
         ]);
     }
 
@@ -27,15 +37,20 @@ class MessageController extends Controller
      #会話を選択した状態（左：一覧 / 右：チャット）
     public function show(Conversation $conversation){
         #自分が参加していない会話は見れない
-        // abort_unless(
-        //     $conversation->users->contains(auth()->id()),
-        //     403
-        // );
+        abort_unless(
+            $conversation->users->contains(auth()->id()),
+            403
+        );
 
-        $conversations = auth()->user()
+        $authUser = auth()->user();
+        $conversations = $authUser
             ->conversations()
             ->with(['users', 'lastMessage'])
             ->get();
+
+        $conversations->each(function ($conv) use ($authUser) {
+        $conv->other_user = $conv->users->firstWhere('id', '!=', $authUser->id);
+    });
 
         #メッセージは古い → 新しい順
         $conversation->load('messages.sender');
@@ -80,9 +95,9 @@ class MessageController extends Controller
 
         #既存の会話を探す
         $conversation = Conversation::whereHas('users', function ($q) use ($authUser) {
-            $q->where('user_id', $authUser->id);
+            $q->where('users.id', $authUser->id);
         })->whereHas('users', function ($q) use ($user) {
-            $q->where('user_id', $user->id);
+            $q->where('users.id', $user->id);
         })->first();
 
         #なければ作成
