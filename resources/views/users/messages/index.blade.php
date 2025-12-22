@@ -12,13 +12,13 @@
                 <a href="{{ route('messages.show', $conv->id) }}" class="text-decoration-none text-dark">
 
                     <div class="p-2 {{ optional($conversation)->id === $conv->id ? 'bg-light' : ' ' }}">
-                        {{-- アイコン --}}
-                        {{-- @if ($user->avatar)
+                        {{-- 相手のアイコン --}}
+                        @if ($user->avatar)
                           <img src="{{ $user->avatar }}" class="rounded-circle avatar-sm">
                           @else
                            <i class="fa-solid fa-circle-user icon-md text-muted"></i>
-                          @endif --}}
-                        {{-- ユーザー名 --}}
+                          @endif
+                        {{-- 相手のユーザー名 --}}
                         <strong>{{ optional($conv->otherUserFor(auth()->id()))->name }}</strong><br>
                         {{-- 直近のメッセージ --}}
                         <small class="text-muted">{{ optional($conv->lastMessage)->body }}</small>

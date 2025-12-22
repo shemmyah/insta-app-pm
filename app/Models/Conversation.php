@@ -13,21 +13,25 @@ class Conversation extends Model
        return $this->belongsToMany(User::class);
     }
 
-    #1対多リレーション(Message→Conversation)
+    #1対多リレーション(→Conversation→Message)
     public function messages() {
        return $this->hasMany(Message::class);
     }
 
-    #新着メッセージ１件だけを取得（DM一覧用）
+    #新着メッセージを取得（DM一覧用）
     public function lastMessage() {
        return $this->hasOne(Message::class)->latestOfMany();
     }
 
     #相手ユーザーの取得
-    public function otherUserFor(int $userId) {
+    public function otherUserFor($authuserId) {
        return $this->users()
-            ->where('user_id', '!=', $userId)
+            ->where('user_id', '!=', $authuserId)
             ->first();
+    }
+
+    public function getOtherUserAttribute() {
+       return $this->otherUserFor(auth()->id());
     }
 
 }
