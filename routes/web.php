@@ -9,6 +9,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\StoryController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NoteController;
 #Admin Controller
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\PostsController;
@@ -45,13 +46,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::patch('/categories/{id}/update', [CategoriesController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}/destroy', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 
-
-
   });
-
-  
-
-
 
 
   #Post
@@ -92,4 +87,13 @@ Route::group(["middleware" => "auth"], function () {
   Route::get('/messages/{conversation}', [MessageController::class, 'show'])->name('messages.show');
   Route::post('/messages/{conversation}', [MessageController::class, 'store'])->name('messages.store');
   Route::post('/messages/start/{user}', [MessageController::class, 'start'])->name('messages.start');
+
+
+  Route::post('/note', [NoteController::class, 'store'])->name('note.store');
+  Route::patch('/note', [NoteController::class, 'update'])->name('note.update');
+  Route::delete('/note', [NoteController::class, 'destroy'])->name('note.destroy');
+  Route::get('/profile/{user}/liked', [ProfileController::class, 'liked'])
+    ->name('profile.liked');
 });
+
+

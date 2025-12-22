@@ -19,6 +19,7 @@ class MessageController extends Controller
         return view('users.messages.index', [
             'conversations' => $conversations,
             'conversation'  => null,
+           
         ]);
     }
 
