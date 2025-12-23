@@ -409,106 +409,119 @@
 <body>
     <div id="app">
         {{-- Modern Navbar --}}
-        <nav class="navbar navbar-expand-md navbar-dark navbar-modern shadow-sm">
-            <div class="container">
-                <a class="logo-container" href="{{ url('/') }}">
-                    <i class="fa-brands fa-instagram ig-logo-icon"></i>
-                    <span class="ig-logo-text">Instagram</span>
-                </a>
+        @if (!View::hasSection('hideNavbar'))
+            <nav class="navbar navbar-expand-md navbar-dark navbar-modern shadow-sm">
+                <div class="container">
+                    <a class="logo-container" href="{{ url('/') }}">
+                        <i class="fa-brands fa-instagram ig-logo-icon"></i>
+                        <span class="ig-logo-text">Instagram</span>
+                    </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto align-items-center" style="gap: 8px;">
-                        @auth
-                            @if (!request()->is('admin/*'))
-                                {{-- Search --}}
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto align-items-center" style="gap: 8px;">
+                            @auth
+                                @if (!request()->is('admin/*'))
+                                    {{-- Search --}}
+                                    <li class="nav-item">
+                                        <button class="nav-icon-btn" data-bs-toggle="modal" data-bs-target="#searchModal"
+                                            title="Search">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </button>
+                                    </li>
+                                @endif
+                            @endauth
+
+                            @guest
+                                @if (Route::has('login'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    </li>
+                                @endif
+
+                                @if (Route::has('register'))
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            href="{{ route('login', ['mode' => 'register']) }}">{{ __('Register') }}</a>
+                                    </li>
+                                @endif
+                            @else
+                                {{-- Home --}}
                                 <li class="nav-item">
-                                    <button class="nav-icon-btn" data-bs-toggle="modal" data-bs-target="#searchModal"
-                                        title="Search">
-                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    <a href="{{ route('index') }}" class="nav-icon-btn text-decoration-none"
+                                        title="Home">
+                                        <i class="fa-solid fa-house"></i>
+                                    </a>
+                                </li>
+
+                                {{-- Message --}}
+                                <li class="nav-item">
+                                    <a href="{{ route('messages.index') }}" class="nav-icon-btn text-decoration-none"
+                                        title="Home">
+                                        <i class="fa-solid fa-message"></i>
+                                    </a>
+                                </li>
+
+                                {{-- Create Post --}}
+                                <li class="nav-item">
+                                    <a href="{{ route('post.create') }}" class="nav-icon-btn text-decoration-none"
+                                        title="Create Post">
+                                        <i class="fa-solid fa-circle-plus"></i>
+                                    </a>
+                                </li>
+
+                                {{-- Account --}}
+                                <li class="nav-item dropdown">
+                                    <button id="account-dropdown" class="btn shadow-none p-0" data-bs-toggle="dropdown">
+                                        @if (Auth::user()->avatar)
+                                            <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}"
+                                                class="nav-avatar">
+                                        @else
+                                            <div class="nav-icon-btn">
+                                                <i class="fa-solid fa-circle-user"></i>
+                                            </div>
+                                        @endif
                                     </button>
-                                </li>
-                            @endif
-                        @endauth
 
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
+                                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-modern"
+                                        aria-labelledby="account-dropdown">
+                                        @can('admin')
+                                            <a href="{{ route('admin.users') }}" class="dropdown-item-modern">
+                                                <i class="fa-solid fa-user-gear fs-4"></i>
+                                                <span>Admin</span>
+                                            </a>
+                                            <div class="dropdown-divider-modern"></div>
+                                        @endcan
 
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link"
-                                        href="{{ route('login', ['mode' => 'register']) }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            {{-- Home --}}
-                            <li class="nav-item">
-                                <a href="{{ route('index') }}" class="nav-icon-btn text-decoration-none" title="Home">
-                                    <i class="fa-solid fa-house"></i>
-                                </a>
-                            </li>
-
-                            {{-- Create Post --}}
-                            <li class="nav-item">
-                                <a href="{{ route('post.create') }}" class="nav-icon-btn text-decoration-none"
-                                    title="Create Post">
-                                    <i class="fa-solid fa-circle-plus"></i>
-                                </a>
-                            </li>
-
-                            {{-- Account --}}
-                            <li class="nav-item dropdown">
-                                <button id="account-dropdown" class="btn shadow-none p-0" data-bs-toggle="dropdown">
-                                    @if (Auth::user()->avatar)
-                                        <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}"
-                                            class="nav-avatar">
-                                    @else
-                                        <div class="nav-icon-btn">
-                                            <i class="fa-solid fa-circle-user"></i>
-                                        </div>
-                                    @endif
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-modern"
-                                    aria-labelledby="account-dropdown">
-                                    @can('admin')
-                                        <a href="{{ route('admin.users') }}" class="dropdown-item-modern">
-                                            <i class="fa-solid fa-user-gear fs-4"></i>
-                                            <span>Admin</span>
+                                        <a href="{{ route('profile.show', Auth::user()->id) }}"
+                                            class="dropdown-item-modern">
+                                            <i class="fa-solid fa-circle-user fs-4"></i>
+                                            <span>Profile</span>
                                         </a>
-                                        <div class="dropdown-divider-modern"></div>
-                                    @endcan
 
-                                    <a href="{{ route('profile.show', Auth::user()->id) }}" class="dropdown-item-modern">
-                                        <i class="fa-solid fa-circle-user fs-4"></i>
-                                        <span>Profile</span>
-                                    </a>
+                                        <a class="dropdown-item-modern" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="fa-solid fa-right-from-bracket fs-3"></i>
+                                            <span>{{ __('Logout') }}</span>
+                                        </a>
 
-                                    <a class="dropdown-item-modern" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i class="fa-solid fa-right-from-bracket fs-3"></i>
-                                        <span>{{ __('Logout') }}</span>
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </li>
+                            @endguest
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        @endif
 
         {{-- Main Content --}}
         <main class="main-content-modern">

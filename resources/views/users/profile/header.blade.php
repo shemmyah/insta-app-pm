@@ -81,7 +81,7 @@
                     <i class="fa-solid fa-share"></i> Share Profile
                 </button>
             @else
-                <a href="#"
+                <a href="{{ route('messages.start', $user->id) }}"
                     class="btn btn-profile-modern btn-secondary-modern w-100">
                     <i class="fa-solid fa-envelope"></i> Message {{ ucfirst($user->name) }}
                 </a>
