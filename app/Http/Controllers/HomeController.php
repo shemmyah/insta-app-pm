@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -27,20 +28,30 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         // $all_posts = $this->post->latest()->get();
         // return view('users.home')->with('all_posts', $all_posts);
         $home_posts = $this->getHomePosts();
         $suggested_users = $this->getSuggestedUsers();
-        // $hasStory= Auth::user()->stories->where('expires_at','>',now())->exists();
+        $file = $request->file('media');
+        $mediaType=null;
+        $path=null;
+   
+        if ($file) {
+        $mime = $file->getMimeType();
 
-        // $user = User::whereHas('stories', function ($query) {
-        // $query->where('expires_at', '>', now());
-        // })->get();
-        // dd($this->user->stories());
-        // $users = $this->user->get();
-        // $user = $this->create();
+        if (Str::startsWith($mime, 'image/')) {
+            $mediaType = 'image';
+            $path = $file->store('stories/temp/images', 'public');
+        } elseif (Str::startsWith($mime, 'video/')) {
+            $mediaType = 'video';
+            $path = $file->store('stories/temp/videos', 'public');
+        } else {
+            abort(400, 'Invalid media type');
+        }
+    }
+
 
         $storyUsers = User::where('id', '!=', Auth::user()->id)
         ->whereHas('stories', function ($query) {
@@ -51,7 +62,9 @@ class HomeController extends Controller
         return view('users.home')
                 ->with('home_posts', $home_posts)
                 ->with('suggested_users', $suggested_users)
-                ->with('storyUsers',$storyUsers);
+                ->with('storyUsers',$storyUsers)
+                ->with('mediaType', $mediaType)
+                ->with('mediaPath', $path);
                 // ->with('hasStory',$hasStory);
 
     }

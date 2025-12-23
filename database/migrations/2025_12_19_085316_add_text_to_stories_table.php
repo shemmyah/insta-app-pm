@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('media_path');
-            $table->enum('media_type',['image','video']);
-            $table->timestamps();
-        });
+         Schema::table('stories', function (Blueprint $table) {
+        $table->string('text')->nullable()->after('media_type');
+    });
     }
 
     /**
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stories');
+        Schema::table('stories', function (Blueprint $table) {
+            $table->dropColumn('text');
+        });
     }
 };

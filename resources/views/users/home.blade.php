@@ -5,40 +5,88 @@
 @section('content')
     <div class="flex gap-4 overflow-x-auto p-3">
 
-        <a href="#" class="d-flex items-center text-decoration-none">
-            <div class="position-relative d-inline-block">
+        @if ($storyUsers->isNotEmpty())
+            {{-- ストーリーあり → modalを開く --}}
+            <div class="position-relative d-inline-block" data-bs-toggle="modal" data-bs-target="#storyModal"
+                style="cursor: pointer;">
+
                 @if (Auth::user()->avatar)
-                    <img src="{{ Auth::user()->avatar }}" class="avatar-md">
+                    <img src="{{ Auth::user()->avatar }}" class="avatar-md rounded-circle">
                 @else
                     <i class="fa-solid fa-circle-user text-secondary icon-md"></i>
                 @endif
 
-                <span class="position-absolute bottom-0 end-0 p-0 d-flex align-items-center text-dark justify-content-center fs-4">+</span>
+                <span class="position-absolute bottom-0 end-0 fs-4">+</span>
             </div>
-            {{-- <span class="text-sm">Your story</span> --}}
-        </a>
+        @else
+            {{-- ストーリーなし →　createへ --}}
+            <a href="{{ route('story.create', Auth::user()->id) }}" class="position-relative d-inline-block">
+                @if (Auth::user()->avatar)
+                <img src="{{ Auth::user()->avatar }}" class="avatar-md rounded-circle">
+                @else
+                <i class="fa-solid fa-circle-user text-secondary icon-md"></i>
+                @endif
 
-        @foreach ($storyUsers as $user)
-            <a href="{{ route('story.show', $user->id) }}" class="flex flex-col items-center">
-                <img src="{{ $user->avatar }}" alt="{{ $user->name }}"
-                    class="w-24 h-24 rounded-full object-cover border-4 border-pink-500">
-                <span class="text-sm text-truncate">{{ $user->name }}</span>
+                <span class="position-absolute bottom-0 end-0 fs-4">+</span>
             </a>
-        @endforeach
+            {{-- @if (Auth::user()->avatar)
+                <a href="{{ route('story.edit') }}" class="position-relative d-inline-block">
+                    <img src="{{ Auth::user()->avatar }}" class="avatar-md rounded-circle">
+                </a>
+            @else
+                <a href="{{ route('story.edit') }}" class="position-relative d-inline-block">
+                    <i class="fa-solid fa-circle-user text-secondary icon-md"></i>
+                </a>
+            @endif --}}
+        @endif
 
     </div>
 
-    <div class="">
+    @if ($storyUsers->isNotEmpty())
+        <div class="modal fade" id="storyModal" tabindex="-1">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content bg-dark text-white">
 
-        {{-- @foreach ($users as $user)
-            <a href="" class="flex flex-col items-center"></a>
-            <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}"
-                class="w-20 h-20 rounded-full border-4 border-pink-500 object-cover">
-            </a>
-            @endforeach --}}
-    </div>
+                    {{-- 閉じる --}}
+                    {{-- <button type="button" class="btn-close btn-close-white ms-auto m-3" data-bs-dismiss="modal"></button>
+                    --}}
 
-    </div>
+                    <div class="modal-body d-flex justify-content-center align-items-center">
+
+                        <div class="story-editor position-relative">
+
+                            {{-- 画像・動画 --}}
+                            @if($mediaType === 'image')
+                                <img src="{{ asset('storage/' . $mediaPath) }}" class="story-media">
+                            @elseif($mediaType === 'video')
+                                <video class="story-media" autoplay muted loop>
+                                    <source src="{{ asset('storage/' . $mediaPath) }}">
+                                </video>
+                            @endif
+
+                            {{-- テキスト --}}
+                            @if(!empty($story->text))
+                                <div class="story-overlay-text">
+                                    {{ $story->text }}
+                                </div>
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer border-0 justify-content-center">
+                        <button class="btn btn-danger">Delete</button>
+                        <a href="/story/edit" class="btn btn-primary">Add</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endif
+
+
+
 
     <main class="py-5">
         <div class="container">

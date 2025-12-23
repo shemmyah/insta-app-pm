@@ -10,7 +10,8 @@ class Story extends Model
         'user_id',
         'media_path',
         'media_type',
-        'expires_at'
+        'expires_at',
+        'text'
     ];
 
     protected $casts = [
