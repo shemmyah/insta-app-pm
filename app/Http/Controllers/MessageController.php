@@ -5,66 +5,75 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Conversation;
+use App\Notifications\NewMessageNotification;
 use App\Models\Message;
 
 class MessageController extends Controller
 {
-    #DMトップ（左：会話一覧/右：未選択）
-    public function index(){
-        $authUser =auth()->user();
-        $conversations = Conversation::with([
-        'users',
-        'lastMessage'
-    ])
-    ->whereHas('users', function ($q) use ($authUser) {
-        $q->where('users.id', $authUser->id);
-    })
-    ->latest('updated_at')
-    ->get();
+    public function index()
+    {
+        $authUser = auth()->user();
 
-     $conversations->each(function ($conv) use ($authUser) {
-        $conv->other_user = $conv->users->firstWhere('id', '!=', $authUser->id);
-    });
+        // Fetch all conversations where the user participates
+        $conversations = Conversation::with(['users', 'lastMessage'])
+            ->whereHas('users', function ($q) use ($authUser) {
+                $q->where('users.id', $authUser->id);
+            })
+            ->latest('updated_at')
+            ->get();
+
+        // Add the "other_user" property for convenience in Blade
+        $conversations->each(function ($conv) use ($authUser) {
+            $conv->other_user = $conv->users->firstWhere('id', '!=', $authUser->id);
+        });
 
         return view('users.messages.index', [
             'conversations' => $conversations,
-            'conversation'  => null,
-            'authUser'      => $authUser,
+            'conversation' => null, // no conversation selected
+            'authUser' => $authUser,
         ]);
     }
 
-    
-     #会話を選択した状態（左：一覧 / 右：チャット）
-    public function show(Conversation $conversation){
-        #自分が参加していない会話は見れない
-        abort_unless(
-            $conversation->users->contains(auth()->id()),
-            403
-        );
-
+    public function show(Conversation $conversation)
+    {
         $authUser = auth()->user();
-        $conversations = $authUser
-            ->conversations()
-            ->with(['users', 'lastMessage'])
+
+        // Ensure the user is part of this conversation
+        abort_unless($conversation->users->contains($authUser->id), 403);
+
+        // Mark all message notifications for this conversation as read
+        $authUser->unreadNotifications
+            ->where('type', 'App\Notifications\NewMessageNotification')
+            ->where('data.conversation_id', $conversation->id)
+            ->markAsRead();
+
+        // Fetch all conversations for the sidebar (no filters)
+        $conversations = Conversation::with(['users', 'lastMessage'])
+            ->whereHas('users', function ($q) use ($authUser) {
+                $q->where('users.id', $authUser->id);
+            })
+            ->latest('updated_at')
             ->get();
 
         $conversations->each(function ($conv) use ($authUser) {
-        $conv->other_user = $conv->users->firstWhere('id', '!=', $authUser->id);
-    });
+            $conv->other_user = $conv->users->firstWhere('id', '!=', $authUser->id);
+        });
 
-        #メッセージは古い → 新しい順
+        // Load messages for the selected conversation
         $conversation->load('messages.sender');
 
         return view('users.messages.index', [
             'conversations' => $conversations,
-            'conversation'  => $conversation,
+            'conversation' => $conversation,
+            'authUser' => $authUser,
         ]);
     }
 
-    
-     #メッセージ送信
-     
-    public function store(Request $request, Conversation $conversation){
+
+
+
+    public function store(Request $request, Conversation $conversation)
+    {
         abort_unless(
             $conversation->users->contains(auth()->id()),
             403
@@ -74,18 +83,25 @@ class MessageController extends Controller
             'body' => 'required|string|max:1000',
         ]);
 
-        $conversation->messages()->create([
+        $message = $conversation->messages()->create([
             'sender_id' => auth()->id(),
-            'body'      => $request->body,
+            'body' => $request->body,
         ]);
+
+        $conversation->users->where('id', '!=', auth()->id())
+            ->each(function ($user) use ($message) {
+                $user->notify(new NewMessageNotification($message));
+            });
 
         return redirect()->route('messages.show', $conversation->id);
     }
 
-    
+
+
     #DM開始（プロフィールの「メッセージを送る」用）
-     
-    public function start(User $user){
+
+    public function start(User $user)
+    {
         $authUser = auth()->user();
 
         // 自分自身にはDMできない
@@ -112,6 +128,6 @@ class MessageController extends Controller
         return redirect()->route('messages.show', $conversation->id);
     }
 }
-    
+
 
 

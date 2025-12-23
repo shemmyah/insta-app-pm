@@ -403,6 +403,37 @@
                 margin-bottom: 20px;
             }
         }
+
+        /* Badge Inside Icon Styling */
+        .badge-nav-overlay {
+            position: absolute;
+            top: 8px;
+            /* Adjusted to sit near the top-right of the inner icon */
+            right: 8px;
+            background: #ff3b30;
+            /* Vibrant red */
+            color: white;
+            font-size: 9px;
+            /* Smaller font to fit inside */
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid rgba(10, 10, 10, 0.95);
+            /* Matches navbar bg to create a gap */
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Ensure the parent can contain the absolute badge */
+        .nav-icon-btn {
+            position: relative;
+            overflow: visible !important;
+            /* Allow badge to pop slightly if needed */
+        }
     </style>
 </head>
 
@@ -460,12 +491,29 @@
                                 </li>
 
                                 {{-- Message --}}
+                                {{-- Message --}}
                                 <li class="nav-item">
                                     <a href="{{ route('messages.index') }}" class="nav-icon-btn text-decoration-none"
-                                        title="Home">
+                                        title="Messages">
                                         <i class="fa-solid fa-message"></i>
+                                        @php
+                                            $unreadCount = auth()
+                                                ->user()
+                                                ->unreadNotifications->where(
+                                                    'type',
+                                                    'App\Notifications\NewMessageNotification',
+                                                )
+                                                ->count();
+                                        @endphp
+
+                                        @if ($unreadCount > 0)
+                                            <span class="badge-nav-overlay">
+                                                {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                                            </span>
+                                        @endif
                                     </a>
                                 </li>
+
 
                                 {{-- Create Post --}}
                                 <li class="nav-item">
