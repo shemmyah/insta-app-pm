@@ -87,7 +87,7 @@ Route::group(["middleware" => "auth"], function () {
   Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
   Route::get('/messages/{conversation}', [MessageController::class, 'show'])->name('messages.show');
   Route::post('/messages/{conversation}', [MessageController::class, 'store'])->name('messages.store');
-  Route::post('/messages/start/{user}', [MessageController::class, 'start'])->name('messages.start');
+  Route::get('/messages/start/{user}', [MessageController::class, 'start'])->name('messages.start');
 
 
   Route::post('/note', [NoteController::class, 'store'])->name('note.store');

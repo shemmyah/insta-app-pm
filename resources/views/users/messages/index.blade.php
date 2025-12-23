@@ -7,7 +7,7 @@
         <div class="row d-flex flex-row">
 
             {{-- 左：会話一覧 --}}
-            <div class="col-3 border-end" style="height: 80vh; overflow-y: auto;">
+            <div class="col-3 border-end border-secondary" style="height: 80vh; overflow-y: auto;">
                 @foreach ($conversations as $conv)
                     <a href="{{ route('messages.show', $conv->id) }}" class="text-decoration-none text-dark">
 
@@ -43,7 +43,7 @@
                 @if ($conversation)
 
                     {{-- ヘッダー --}}
-                    <div class="border-bottom p-2 bg-primary text-white">
+                    <div class="border-bottom border-secondary p-2 bg-secondary bg-opacity-50 text-white">
                         <strong>
                             {{ $conversation->users->where('id', '!=', auth()->id())->first()->name }}
                         </strong>
@@ -58,7 +58,7 @@
                                 {{-- 相手のアイコン --}}
                                 @if ($message->sender_id !== auth()->id())
                                     @if ($message->sender->avatar)
-                                        <img src="{{ $message->sender->avatar }}" class="rounded-circle avatar-sm me-2">
+                                        <img src="{{ $message->sender->avatar }}" class="rounded-circle avatar-sm me-2 ">
                                     @else
                                         <i class="fa-solid fa-circle-user icon-md text-muted me-2"></i>
                                     @endif
@@ -69,7 +69,7 @@
                                 {{-- 自分のアイコン --}}
                                 @if ($message->sender_id == auth()->id())
                                     @if ($message->sender->avatar)
-                                        <img src="{{ $message->sender->avatar }}" class="rounded-circle avatar-sm me-2">
+                                        <img src="{{ $message->sender->avatar }}" class="rounded-circle avatar-sm ms-2">
                                     @else
                                         <i class="fa-solid fa-circle-user icon-md text-muted me-2"></i>
                                     @endif
@@ -80,14 +80,18 @@
 
                     {{-- 入力欄 --}}
                     <form action="{{ route('messages.store', $conversation->id) }}" method="post"
-                        class="d-flex p-2 border-top">
+                        class="d-flex p-2 border-top border-secondary">
                         @csrf
-                        <input type="text" name="body" class="form-control" placeholder="Message...">
-                        <button class="btn btn-primary">Send</button>
+                        <div class="input-group mb-3">
+                            <input type="text" name="body" class="form-control"
+                                placeholder="Message..."><span class="input-group-text"><button
+                                    class="btn ms-2"><i class="fa-regular fa-paper-plane text-dark"></i></button></span>
+                        </div>
+
                     </form>
                 @else
                     <div class="d-flex align-items-center justify-content-center h-100 text-secondary">
-                         Let's start a conversation!!
+                        Let's start a conversation!!
                     </div>
                 @endif
             </div>
